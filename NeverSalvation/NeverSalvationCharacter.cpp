@@ -18,7 +18,7 @@ DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 ANeverSalvationCharacter::ANeverSalvationCharacter()
 {
 	// Use only Yaw from the controller and ignore the rest of the rotation.
-	bUseControllerRotationPitch = false;
+	//bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
