@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "Logic/Human.h"
 #include "NeverSalvationCharacter.generated.h"
 
 class UTextRenderComponent;
@@ -40,6 +41,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* IdleAnimation;
 
+	class BaseActor* human;
+
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
 
@@ -47,6 +50,8 @@ protected:
 	void MoveRight(float Value);
 
 	void UpdateCharacter();
+
+	void ANeverSalvationCharacter::OnJumped_Implementation() override;
 
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);

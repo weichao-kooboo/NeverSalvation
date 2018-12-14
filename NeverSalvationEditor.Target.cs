@@ -8,6 +8,7 @@ public class NeverSalvationEditorTarget : TargetRules
 	public NeverSalvationEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		ExtraModuleNames.Add("NeverSalvation");
+        ExtraModuleNames.Add("Logic");
+        ExtraModuleNames.Add("NeverSalvation");
 	}
 }

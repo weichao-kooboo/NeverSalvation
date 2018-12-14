@@ -8,6 +8,7 @@ public class NeverSalvationTarget : TargetRules
 	public NeverSalvationTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-		ExtraModuleNames.Add("NeverSalvation");
+        ExtraModuleNames.Add("Logic");
+        ExtraModuleNames.Add("NeverSalvation");
 	}
 }

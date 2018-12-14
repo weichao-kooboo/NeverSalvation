@@ -17,8 +17,9 @@ DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
 ANeverSalvationCharacter::ANeverSalvationCharacter()
 {
+	human = new Human();
 	// Use only Yaw from the controller and ignore the rest of the rotation.
-	//bUseControllerRotationPitch = false;
+	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
@@ -154,4 +155,8 @@ void ANeverSalvationCharacter::UpdateCharacter()
 			Controller->SetControlRotation(FRotator(0.0f, 0.0f, 0.0f));
 		}
 	}
+}
+
+void ANeverSalvationCharacter::OnJumped_Implementation() {
+
 }
