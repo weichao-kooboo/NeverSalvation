@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
 #include "Logic/Human.h"
+#include "ProjectActor.h"
 #include "NeverSalvationCharacter.generated.h"
 
 class UTextRenderComponent;
@@ -62,6 +63,7 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
+	void OnFire();
 
 public:
 	ANeverSalvationCharacter();
@@ -70,4 +72,7 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<class AProjectActor> ProjectileClass;
 };

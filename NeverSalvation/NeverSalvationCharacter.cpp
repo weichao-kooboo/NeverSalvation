@@ -18,6 +18,9 @@ DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 ANeverSalvationCharacter::ANeverSalvationCharacter()
 {
 	human = new Human();
+
+	//RunningAnimation = CreateDefaultSubobject<UPaperFlipbook>(TEXT("RunningAnimation"));
+
 	// Use only Yaw from the controller and ignore the rest of the rotation.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
@@ -113,6 +116,33 @@ void ANeverSalvationCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &ANeverSalvationCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &ANeverSalvationCharacter::TouchStopped);
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ANeverSalvationCharacter::OnFire);
+}
+
+void ANeverSalvationCharacter::OnFire()
+{
+	if (ProjectileClass != NULL) {
+		UWorld* const World = GetWorld();
+		if (World != NULL) {
+
+			/*const FRotator SpawnRotation = GetCapsuleComponent()->GetComponentRotation();
+			const FVector SpawnLocation = GetCapsuleComponent()->GetComponentLocation();
+			World->SpawnActor<AProjectActor>(ProjectileClass, SpawnLocation, SpawnRotation);*/
+
+			const FRotator SpawnRotation = GetControlRotation();
+			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+			//const FVector SpawnLocation = ((GetCapsuleComponent() != nullptr) ? GetCapsuleComponent()->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+			const FVector SpawnLocation = ((GetCapsuleComponent() != nullptr) ? GetCapsuleComponent()->GetComponentLocation() : GetActorLocation());
+
+			//Set Spawn Collision Handling Override
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+			// spawn the projectile at the muzzle
+			World->SpawnActor<AProjectActor>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+		}
+	}
 }
 
 void ANeverSalvationCharacter::MoveRight(float Value)
