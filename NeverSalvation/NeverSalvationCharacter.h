@@ -42,6 +42,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* IdleAnimation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbookComponent* AttackAnimation;
+
 	class BaseActor* human;
 
 	/** Called to choose the correct animation to play based on the character's movement state */
@@ -75,4 +78,6 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<class AProjectActor> ProjectileClass;
+private:
+	bool bState = false;
 };

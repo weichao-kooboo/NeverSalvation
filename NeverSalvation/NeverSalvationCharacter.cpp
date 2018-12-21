@@ -19,6 +19,19 @@ ANeverSalvationCharacter::ANeverSalvationCharacter()
 {
 	human = new Human();
 
+	AttackAnimation = CreateOptionalDefaultSubobject<UPaperFlipbookComponent>(TEXT("PaperFlipbookComponent"));
+	if (AttackAnimation)
+	{
+		AttackAnimation->AlwaysLoadOnClient = true;
+		AttackAnimation->AlwaysLoadOnServer = true;
+		AttackAnimation->bOwnerNoSee = true;
+		AttackAnimation->bAffectDynamicIndirectLighting = true;
+		AttackAnimation->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+		AttackAnimation->SetupAttachment(GetSprite());
+		AttackAnimation->bGenerateOverlapEvents = false;
+		AttackAnimation->SetLooping(false);
+	}
+
 	//RunningAnimation = CreateDefaultSubobject<UPaperFlipbook>(TEXT("RunningAnimation"));
 
 	// Use only Yaw from the controller and ignore the rest of the rotation.
@@ -88,11 +101,21 @@ void ANeverSalvationCharacter::UpdateAnimation()
 	const FVector PlayerVelocity = GetVelocity();
 	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
 
-	// Are we moving or standing still?
-	UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
-	if( GetSprite()->GetFlipbook() != DesiredAnimation 	)
-	{
-		GetSprite()->SetFlipbook(DesiredAnimation);
+	if (bState == true) {
+			if (GetSprite()->GetFlipbook() != AttackAnimation->GetFlipbook())
+			{
+				GetSprite()->SetFlipbook(AttackAnimation->GetFlipbook());
+			}
+			if (AttackAnimation->IsPlaying() == false)
+				bState = false;
+	}
+	else {
+		// Are we moving or standing still?
+		UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
+		if (GetSprite()->GetFlipbook() != DesiredAnimation)
+		{
+			GetSprite()->SetFlipbook(DesiredAnimation);
+		}
 	}
 }
 
@@ -122,6 +145,8 @@ void ANeverSalvationCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void ANeverSalvationCharacter::OnFire()
 {
+	bState = true;
+	AttackAnimation->Play();
 	if (ProjectileClass != NULL) {
 		UWorld* const World = GetWorld();
 		if (World != NULL) {

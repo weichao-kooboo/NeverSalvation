@@ -25,12 +25,15 @@ AProjectActor::AProjectActor()
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 300.f;
-	ProjectileMovement->MaxSpeed = 300.f;
+	ProjectileMovement->InitialSpeed = 50.f;
+	ProjectileMovement->MaxSpeed = 100.f;
+	//如果想要抛出物不默认受重力影响,选择0,然后设置Velocity朝着坐标移动
+	ProjectileMovement->ProjectileGravityScale = 0;
+	ProjectileMovement->Velocity = FVector(10.0f, 0.0f, 0.0f);
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 
-	MySprite = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MySprite"));
+	MySprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("MySprite"));
 	if (MySprite) {
 		MySprite->AttachTo(RootComponent);
 		static FName CollisionProfileName(TEXT("CharacterMesh"));
@@ -47,7 +50,7 @@ void AProjectActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
 	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
 		Destroy();
 	}

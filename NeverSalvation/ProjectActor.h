@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine.h"
+#include "PaperSpriteComponent.h"
 #include "GameFramework/Actor.h"
 #include "ProjectActor.generated.h"
 
@@ -24,7 +25,7 @@ public:
 	AProjectActor();
 
 	UPROPERTY(Category = Character, EditAnywhere, BlueprintReadWrite)
-	class UStaticMeshComponent* MySprite;
+	class UPaperSpriteComponent *MySprite;
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
