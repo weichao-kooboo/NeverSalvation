@@ -18,7 +18,7 @@ DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 ANeverSalvationCharacter::ANeverSalvationCharacter()
 {
 	human = new Human();
-
+	/*
 	AttackAnimation = CreateOptionalDefaultSubobject<UPaperFlipbookComponent>(TEXT("PaperFlipbookComponent"));
 	if (AttackAnimation)
 	{
@@ -30,7 +30,9 @@ ANeverSalvationCharacter::ANeverSalvationCharacter()
 		AttackAnimation->SetupAttachment(GetSprite());
 		AttackAnimation->bGenerateOverlapEvents = false;
 		AttackAnimation->SetLooping(false);
+		AttackAnimation
 	}
+	*/
 
 	//RunningAnimation = CreateDefaultSubobject<UPaperFlipbook>(TEXT("RunningAnimation"));
 
@@ -90,7 +92,15 @@ ANeverSalvationCharacter::ANeverSalvationCharacter()
 
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
+	GetSprite()->OnFinishedPlaying.AddDynamic(this, &ANeverSalvationCharacter::OnFinishedPlaying);
 	bReplicates = true;
+}
+
+void ANeverSalvationCharacter::OnFinishedPlaying()
+{
+	if (bState == 2) {
+		bState = 0;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -101,22 +111,22 @@ void ANeverSalvationCharacter::UpdateAnimation()
 	const FVector PlayerVelocity = GetVelocity();
 	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
 
-	if (bState == true) {
-			if (GetSprite()->GetFlipbook() != AttackAnimation->GetFlipbook())
-			{
-				GetSprite()->SetFlipbook(AttackAnimation->GetFlipbook());
-			}
-			if (AttackAnimation->IsPlaying() == false)
-				bState = false;
+	if (bState == 2) 
+	{
+		GetSprite()->SetLooping(false);
+		GetSprite()->SetFlipbook(AttackAnimation);
 	}
 	else {
 		// Are we moving or standing still?
 		UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
 		if (GetSprite()->GetFlipbook() != DesiredAnimation)
 		{
+			GetSprite()->SetLooping(true);
 			GetSprite()->SetFlipbook(DesiredAnimation);
 		}
 	}
+	if (GetSprite()->IsPlaying() == false)
+		GetSprite()->Play();
 }
 
 void ANeverSalvationCharacter::Tick(float DeltaSeconds)
@@ -145,8 +155,7 @@ void ANeverSalvationCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void ANeverSalvationCharacter::OnFire()
 {
-	bState = true;
-	AttackAnimation->Play();
+	bState = 2;
 	if (ProjectileClass != NULL) {
 		UWorld* const World = GetWorld();
 		if (World != NULL) {

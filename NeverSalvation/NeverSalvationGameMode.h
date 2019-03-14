@@ -16,6 +16,7 @@ UCLASS(minimalapi)
 class ANeverSalvationGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+		virtual void BeginPlay() override;
 public:
 	ANeverSalvationGameMode();
 };

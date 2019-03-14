@@ -6,6 +6,7 @@
 #include "PaperCharacter.h"
 #include "Logic/Human.h"
 #include "ProjectActor.h"
+#include "ActorPaperFlipbook.h"
 #include "NeverSalvationCharacter.generated.h"
 
 class UTextRenderComponent;
@@ -43,7 +44,7 @@ protected:
 	class UPaperFlipbook* IdleAnimation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	class UPaperFlipbookComponent* AttackAnimation;
+	class UPaperFlipbook* AttackAnimation;
 
 	class BaseActor* human;
 
@@ -79,5 +80,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<class AProjectActor> ProjectileClass;
 private:
-	bool bState = false;
+	int bState = 0; 
+	UFUNCTION()
+	void OnFinishedPlaying();
 };
