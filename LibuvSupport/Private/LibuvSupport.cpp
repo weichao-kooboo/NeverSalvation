@@ -11,6 +11,5 @@ void FLibuvSupport::StartupModule(){
 	int k = 0;
 }
 void FLibuvSupport::ShutdownModule(){
-
 	int k = 0;
 }
